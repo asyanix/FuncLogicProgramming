@@ -1,23 +1,23 @@
 // Рекурсия вверх
-let sumDigitsUp n =
-    let rec sumDigitsUp1 n curSum =
+let sumDigitsDown n =
+    let rec sumDigitsDown1 n curSum =
         if n = 0 then curSum
         else
             let n1 = n / 10
             let cifr = n % 10
             let newSum = curSum + cifr
-            sumDigitsUp1 n1 newSum
-    sumDigitsUp1 n 0
+            sumDigitsDown1 n1 newSum
+    sumDigitsDown1 n 0
 
-let result = sumDigitsUp 12345
+let result = sumDigitsDown 12345
 printfn "Сумма цифр: %d" result
 
 // Рекурсия вниз
-let rec sumDigitsDown n =
+let rec sumDigitsUp n =
     if n = 0 then 0
-    else (n%10) + (sumDigitsDown (n / 10))
+    else (n%10) + (sumDigitsUp (n / 10))
 
-let result2 = sumDigitsDown 12345
+let result2 = sumDigitsUp 12345
 printfn "Сумма цифр: %d" result2
 
 // Хвостовая рекурсия 

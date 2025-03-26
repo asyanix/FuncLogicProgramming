@@ -3,3 +3,4 @@ obj
 RecursionAndFunctions.fsproj
 .fake
 bin
+*.md
