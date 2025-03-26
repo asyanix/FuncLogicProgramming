@@ -47,3 +47,36 @@ let productOfDivisorsWithSmallerDigitSum number =
     findProduct 1 1
 
 System.Console.WriteLine(countDigitsGreaterThan3 173829)
+
+// Метод 3. Найти количество чисел, не являющихся делителями исходного числа, не взамно 
+// простых с ним и взаимно простых с суммой простых цифр этого числа.
+
+let sumOfPrimeDigits n =
+    let rec sumDigits n acc =
+        if n = 0 then acc
+        else
+            let digit = n % 10
+            let acc = if isPrime digit then acc + digit else acc
+            sumDigits (n / 10) acc
+    sumDigits n 0
+
+let gcd a b =
+    let rec gcdTail a b =
+        if b = 0 then a else gcdTail b (a % b)
+    gcdTail a b
+
+let countNumbers number =
+    let sumPrimes = sumOfPrimeDigits number
+    let rec countRec n acc =
+        if n > number then acc
+        else
+            let isNotDivisor = number % n <> 0
+            let notCoprimeWithNumber = gcd number n <> 1
+            let coprimeWithPrimeSum = gcd sumPrimes n = 1
+
+            let acc = if isNotDivisor && notCoprimeWithNumber && coprimeWithPrimeSum then acc + 1 else acc
+            countRec (n + 1) acc
+    countRec 1 0
+
+
+System.Console.WriteLine(countNumbers 30)
