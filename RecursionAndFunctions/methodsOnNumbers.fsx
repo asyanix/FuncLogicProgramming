@@ -80,3 +80,36 @@ let countNumbers number =
 
 
 System.Console.WriteLine(countNumbers 30)
+
+// Задание 20. Напишите программу, в которой пользователь вводит кортеж из двух чисел, 
+// где первое число это номер одной из трех функций вашего варианта, второе число 
+// аргумент этой функции. Построить функцию, которая принимает номер от 1 до 3 и 
+// возвращает одну из трех написанных функций. Далее программа выполняет указанную 
+// функцию и выдает результат на экран. Для реализации функции main использовать только 
+// оператор каррирования, потом только оператор суперпозиции.
+
+let selectFunc = function
+    | 1 -> sumOfPrimeDiv
+    | 2 -> productOfDivisorsWithSmallerDigitSum
+    | 3 -> countNumbers
+    | _ -> failwith "Ошибка: номер функции должен быть от 1 до 3"
+
+let mainCurry (n, m) =
+    let func = selectFunc n
+    let result = func m
+    printfn "Результат: %d" result
+
+let mainSuper = selectFunc >> (fun f -> f >> printfn "Результат: %d")
+
+
+printfn "Выберите функцию (от 1 до 3):"
+let n = System.Int32.Parse(System.Console.ReadLine())
+
+System.Console.WriteLine("Введите число")
+let m = System.Int32.Parse(System.Console.ReadLine())
+
+printfn "\nКаррирование:"
+mainCurry (n, m)
+
+printfn "\nСуперпозиция:"
+mainSuper n m
