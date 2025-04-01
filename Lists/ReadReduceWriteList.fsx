@@ -322,3 +322,45 @@ Console.Write("Лист: ")
 let missingList = find_missing_list arr3
 Console.WriteLine(String.Join(", ", missingList))
 
+// 1.30	Дан целочисленный массив и натуральный индекс (число, меньшее размера массива). 
+// Необходимо определить является ли элемент по указанному индексу локальным максимумом.
+
+let rec get_element idx lst =
+    match lst with
+    | head :: tail -> if idx = 0 then head else get_element (idx - 1) tail
+    | [] -> failwith "Индекс вне диапазона"
+
+let is_local_max_church (arr: int array) (index: int) =
+    let lst = Array.toList arr
+    match lst with
+    | [] -> false
+    | _ ->
+        let elem = get_element index lst
+        let leftOpt = if index > 0 then Some (get_element (index - 1) lst) else None
+        let rightOpt = if index < (List.length lst - 1) then Some (get_element (index + 1) lst) else None
+        match (leftOpt, rightOpt) with
+        | (Some left, Some right) -> elem > left && elem > right
+        | (None, Some right) -> elem > right
+        | (Some left, None) -> elem > left
+        | (None, None) -> true
+
+let is_local_max_list (arr: int array) (index: int) =
+    if index < 0 || index >= Array.length arr then false
+    else
+        let lst = Array.toList arr
+        let elem = List.item index lst
+        let leftOpt = if index > 0 then Some (List.item (index - 1) lst) else None
+        let rightOpt = if index < (List.length lst - 1) then Some (List.item (index + 1) lst) else None
+        match (leftOpt, rightOpt) with
+        | (Some left, Some right) -> elem > left && elem > right
+        | (None, Some right) -> elem > right
+        | (Some left, None) -> elem > left
+        | (None, None) -> true
+
+let arr4 = [| 3; 5; 4; 7; 6; 2 |]
+Console.WriteLine("Проверка элемента по индексу 3 на локальный максимум:")
+Console.Write("Чёрч: ")
+Console.WriteLine(is_local_max_church arr4 3)
+Console.Write("Лист: ")
+Console.WriteLine(is_local_max_list arr4 3)
+
