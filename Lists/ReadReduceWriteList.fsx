@@ -446,3 +446,42 @@ Console.WriteLine(String.Join(", ", resultChurch))
 Console.Write("Лист: ")
 let resultList = symmetric_unique_list L1 L2
 Console.WriteLine(String.Join(", ", resultList))
+
+// 1.60. Дан список. Построить массив из элементов, делящихся на свой номер и встречающихся в исходном массиве 1 раз.
+
+let array_from_list_church (lst: int list) =
+    let rec count_occ x lst =
+        match lst with
+        | [] -> 0
+        | h :: t -> (if h = x then 1 else 0) + count_occ x t
+
+    let rec process idx remaining acc =
+        match remaining with
+        | [] -> List.rev acc
+        | h :: t ->
+            if count_occ h lst = 1 && (h % idx = 0) then
+                process (idx + 1) t (h :: acc)
+            else
+                process (idx + 1) t acc
+    lst |> process 1 [] |> Array.ofList
+
+let array_from_list_list (lst: int list) =
+    let freq = lst |> List.countBy id |> Map.ofList
+    lst
+    |> List.mapi (fun i x -> (i + 1, x))
+    |> List.filter (fun (num, x) -> 
+           (Map.find x freq) = 1 &&
+           (x % num = 0))
+    |> List.map snd
+    |> Array.ofList
+
+let lst = [10; 3; 6; 4; 12; 3; 8; 16]
+    
+Console.WriteLine("Массив из элементов, делящихся на свой номер и встречающихся 1 раз:")
+Console.Write("Черч: ")
+let arrChurch = array_from_list_church lst
+Console.WriteLine(String.Join(", ", arrChurch))
+    
+Console.Write("Лист: ")
+let arrList = array_from_list_list lst
+Console.WriteLine(String.Join(", ", arrList))
