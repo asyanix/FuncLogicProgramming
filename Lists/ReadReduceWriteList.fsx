@@ -165,3 +165,18 @@ let most_frequent list =
 
 System.Console.Write("Самый частый элемент с использованием класса List: ")
 System.Console.WriteLine(most_frequent arr)
+
+// Задание 8. Реализовать функцию, которая для данного списка указывает, сколько элементов 
+// из него могут быть квадратом какого-то из элементов списка.
+
+let count_square_elements (list: int list) =
+    let unique_elements = List.distinct list
+    list
+    |> List.filter (fun x ->
+        unique_elements
+        |> List.exists (fun y -> y * y = x)
+    )
+    |> List.length
+
+System.Console.Write("Количество элементов, которые могут быть квадратами других элементов: ")
+System.Console.WriteLine(count_square_elements arr)
