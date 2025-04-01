@@ -395,5 +395,54 @@ let arr5 = [| 7; 4; 9; 2; 8; 3; 10 |]
 Console.WriteLine("Минимальный чётный элемент в массиве:")
 Console.Write("Чёрч: ")
 Console.WriteLine(find_min_even_church arr5)
-Console.Write("List: ")
+Console.Write("Лист: ")
 Console.WriteLine(find_min_even_list arr5)
+
+// 1.50. Для двух введенных списков L1 и L2 построить новый список, состоящий из элементов, 
+// встречающихся только в одном из этих списков и не повторяющихся в них.
+
+let symmetric_unique_church (l1: 'a list) (l2: 'a list) =
+    let rec count_occ x lst =
+        match lst with
+        | [] -> 0
+        | h :: t -> (if h = x then 1 else 0) + count_occ x t
+
+    let rec exists x lst =
+        match lst with
+        | [] -> false
+        | h :: t -> if h = x then true else exists x t
+
+    let rec filter_unique lst other acc =
+        match lst with
+        | [] -> List.rev acc
+        | h :: t ->
+            if count_occ h lst = 1 && not (exists h other) then
+                filter_unique t other (h :: acc)
+            else
+                filter_unique t other acc
+
+    let uniqueFromL1 = filter_unique l1 l2 []
+    let uniqueFromL2 = filter_unique l2 l1 []
+    uniqueFromL1 @ uniqueFromL2
+
+let symmetric_unique_list (l1: 'a list) (l2: 'a list) =
+    let uniqueFromL1 = 
+        l1 |> List.filter (fun x -> (l1 |> List.filter ((=) x) |> List.length) = 1 
+                                      && not (List.contains x l2))
+    let uniqueFromL2 = 
+        l2 |> List.filter (fun x -> (l2 |> List.filter ((=) x) |> List.length) = 1 
+                                      && not (List.contains x l1))
+    uniqueFromL1 @ uniqueFromL2
+
+
+let L1 = [1; 2; 3; 4; 2; 5]
+let L2 = [3; 6; 7; 3; 8; 9]
+
+Console.WriteLine("Элементы, встречающиеся только в одном из списков и не повторяющиеся в них:")
+Console.Write("Черч: ")
+let resultChurch = symmetric_unique_church L1 L2
+Console.WriteLine(String.Join(", ", resultChurch))
+
+Console.Write("Лист: ")
+let resultList = symmetric_unique_list L1 L2
+Console.WriteLine(String.Join(", ", resultList))
