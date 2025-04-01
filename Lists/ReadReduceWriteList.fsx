@@ -239,3 +239,35 @@ System.Console.WriteLine("Введите строки (пустая строка
 let sorted_strings = read_and_sort_strings_by_length ()
 System.Console.WriteLine("Отсортированные по длине строки: ")
 sorted_strings |> List.iter (System.Console.WriteLine)
+
+
+// 1.10	Даны два массива. Необходимо найти количество совпадающих по значению элементов.
+
+let count_common_church (arr1: int array) (arr2: int array) =
+    let lst2 = Array.toList arr2
+    let rec exists_in x lst =
+        match lst with
+        | head :: tail -> if head = x then true else exists_in x tail
+        | [] -> false
+    let rec count lst =
+        match lst with
+        | head :: tail ->
+            let tailCount = count tail
+            if exists_in head lst2 then 1 + tailCount else tailCount
+        | [] -> 0
+
+    count (Array.toList arr1)
+
+let count_common_list (arr1: int array) (arr2: int array) =
+    let lst1 = Array.toList arr1
+    let lst2 = Array.toList arr2
+    lst1 |> List.filter (fun x -> List.contains x lst2) |> List.length
+
+let arr1 = [| 1; 2; 3; 4; 3; 2; 1 |]
+let arr2 = [| 3; 7; 3; 8; 2; 9 |]
+
+Console.WriteLine("Количество совпадающих по значению элементов:")
+Console.Write("Чёрч: ")
+Console.WriteLine(count_common_church arr1 arr2)
+Console.Write("Лист: ")
+Console.WriteLine(count_common_list arr1 arr2)
