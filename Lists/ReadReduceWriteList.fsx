@@ -364,3 +364,36 @@ Console.WriteLine(is_local_max_church arr4 3)
 Console.Write("Лист: ")
 Console.WriteLine(is_local_max_list arr4 3)
 
+// 1.40	Дан целочисленный массив. Необходимо найти минимальный четный элемент.
+
+let find_min_even_church (arr: int array) =
+    let lst = Array.toList arr
+    let rec find_min candidate lst =
+        match lst with
+        | [] -> candidate
+        | head :: tail ->
+            if head % 2 = 0 then
+                let newCandidate =
+                    match candidate with
+                    | None -> Some head
+                    | Some cur -> Some (if head < cur then head else cur)
+                find_min newCandidate tail
+            else
+                find_min candidate tail
+    match find_min None lst with
+    | Some result -> result
+    | None -> failwith "Нет чётных элементов"
+
+let find_min_even_list (arr: int array) =
+    let lst = Array.toList arr
+    let evens = List.filter (fun x -> x % 2 = 0) lst
+    if evens.IsEmpty then failwith "Нет чётных элементов"
+    else List.min evens
+
+let arr5 = [| 7; 4; 9; 2; 8; 3; 10 |]
+
+Console.WriteLine("Минимальный чётный элемент в массиве:")
+Console.Write("Чёрч: ")
+Console.WriteLine(find_min_even_church arr5)
+Console.Write("List: ")
+Console.WriteLine(find_min_even_list arr5)
