@@ -1,3 +1,5 @@
+open System
+
 // Задание 1. Написать функцию, которая по заданному числу n возвращает список, прочитанный с клавиатуры.
 
 let readList n =
@@ -180,3 +182,60 @@ let count_square_elements (list: int list) =
 
 System.Console.Write("Количество элементов, которые могут быть квадратами других элементов: ")
 System.Console.WriteLine(count_square_elements arr)
+
+// Задание 9. Реализовать функцию, которая по трем спискам составляет список, состоящий из кортежей длины 3, 
+// где каждый кортеж (ai,bi,ci) с номером I получен следующим образом:
+// Ai – I по убыванию элемент первого списка
+// Bi – I по возрастанию суммы цифр элемент второго списка
+// Сi - I по убыванию количества делителей элемент третьего списка
+
+let digit_sum n:int =
+    let rec digit_sum_inner n curSum =
+        if n = 0 then curSum
+        else
+            let n1 = n/10
+            let digit = n%10
+            let sum = curSum + digit
+            digit_sum_inner n1 sum
+    digit_sum_inner n 0
+
+let count_divisors n =
+    if n = 0 then 0
+    else
+        let nAbs = abs n
+        [1..nAbs] |> List.filter (fun x -> nAbs % x = 0) |> List.length
+
+let create_tuples (listA: int list) (listB: int list) (listC: int list) =
+    let sortedA = listA |> List.sortByDescending id
+    
+    let sortedB = 
+        listB 
+        |> List.sortBy (fun x -> (digit_sum x, abs x))
+    
+    let sortedC = 
+        listC 
+        |> List.sortByDescending (fun x -> (count_divisors x, abs x))
+    
+    List.zip3 sortedA sortedB sortedC
+
+let read_and_sort_strings_by_length () =
+    let rec readLines acc =
+        let line = System.Console.ReadLine()
+        if String.IsNullOrEmpty line then
+            acc
+        else
+            readLines (line :: acc)
+    
+    let lines = readLines [] |> List.rev
+    lines |> List.sortBy (fun s -> s.Length)
+
+
+let listA = [32; 51; 38; 42]   
+let listB = [41; 64; 98; 21]
+let listC = [75; 56; 81; 36]
+System.Console.Write("Список из кортежей (ai, bi, ci): ")
+System.Console.WriteLine(create_tuples listA listB listC)
+System.Console.WriteLine("Введите строки (пустая строка - остановка):")
+let sorted_strings = read_and_sort_strings_by_length ()
+System.Console.WriteLine("Отсортированные по длине строки: ")
+sorted_strings |> List.iter (System.Console.WriteLine)
