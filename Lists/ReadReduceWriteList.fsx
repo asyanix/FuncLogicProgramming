@@ -271,3 +271,54 @@ Console.Write("Чёрч: ")
 Console.WriteLine(count_common_church arr1 arr2)
 Console.Write("Лист: ")
 Console.WriteLine(count_common_list arr1 arr2)
+
+// 1.20	Дан целочисленный массив. Необходимо найти все пропущенные числа
+
+let find_missing_church (arr: int array) =
+    let lst = Array.toList arr
+
+    let rec find_min_max lst currentMin currentMax =
+        match lst with
+        | [] -> (currentMin, currentMax)
+        | head :: tail ->
+            let newMin = if head < currentMin then head else currentMin
+            let newMax = if head > currentMax then head else currentMax
+            find_min_max tail newMin newMax
+
+    let (minVal, maxVal) =
+        match lst with
+        | [] -> failwith "Пустой массив"
+        | head :: tail -> find_min_max tail head head
+
+    let rec exists x lst =
+        match lst with
+        | head :: tail -> if head = x then true else exists x tail
+        | [] -> false
+
+    let rec build_missing current maxVal acc =
+        if current > maxVal then List.rev acc
+        else
+            if exists current lst then
+                build_missing (current + 1) maxVal acc
+            else
+                build_missing (current + 1) maxVal (current :: acc)
+
+    build_missing minVal maxVal []
+
+let find_missing_list (arr: int array) =
+    let lst = Array.toList arr
+    let minVal = List.min lst
+    let maxVal = List.max lst
+    [minVal .. maxVal] |> List.filter (fun x -> not (List.contains x lst))
+
+let arr3 = [| 1; 2; 4; 6; 7; 9 |]
+
+Console.WriteLine("Пропущенные числа в массиве:")
+Console.Write("Чёрч: ")
+let missingChurch = find_missing_church arr3
+Console.WriteLine(String.Join(", ", missingChurch))
+    
+Console.Write("Лист: ")
+let missingList = find_missing_list arr3
+Console.WriteLine(String.Join(", ", missingList))
+
