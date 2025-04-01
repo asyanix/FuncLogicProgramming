@@ -144,3 +144,24 @@ let print_tree tree =
             print tail
     print (traverse tree)
 
+let tree = 
+        empty
+        |> insert "banana"
+        |> insert "apple"
+        |> insert "cherry"
+        |> insert "mango"
+        |> insert "lemon"
+System.Console.WriteLine("Вывод двоичного дерева:")
+print_tree tree
+
+// Задание 7. Реализовать функцию, которая для заданного списка находит самый частый элемент. 
+
+let most_frequent list =
+    list
+    |> List.countBy id
+    |> List.sortByDescending snd
+    |> List.head
+    |> fst
+
+System.Console.Write("Самый частый элемент с использованием класса List: ")
+System.Console.WriteLine(most_frequent arr)
