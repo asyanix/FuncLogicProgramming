@@ -1,3 +1,5 @@
+// Задание 1. Написать функцию, которая по заданному числу n возвращает список, прочитанный с клавиатуры.
+
 let readList n =
     let rec read n list =
         match n with
@@ -8,7 +10,16 @@ let readList n =
             read (k - 1) newList
     read n []
 
+// Задание 2. Написать функцию, которая выводит список на экран.
+let rec writeList list =
+    match list with
+    | [] -> ignore
+    | head :: tail -> 
+        System.Console.WriteLine(head.ToString())
+        writeList tail
 
+// Задание 3. Написать функцию, принимающая в качестве аргументов: список, целочисленную функцию, 
+// предикат, инициализирующее значение аккумулятора, возвращающую целочисленное значение. 
 let rec reduce_list list (f: int->int->int) (condition: int->bool) acc =
     match list with
     | [] -> acc
@@ -17,7 +28,8 @@ let rec reduce_list list (f: int->int->int) (condition: int->bool) acc =
         let flag = condition current
         let newAcc = if condition current then f acc current else acc
         reduce_list tail f condition newAcc
-    
+
+// Задание 4. С помощью этой функции написать функции для мин элементов списка, суммы чётных, количества нечётных элементов.    
 let min_list list = 
     match list with
     | [] -> 0
@@ -69,16 +81,10 @@ let get_from_list list pos =
                     get tail num new_num
     get list pos 1
 
+// Задание 5. Реализовать функцию, которая для заданного списка находит самый частый элемент. 
 let find_most_frequent list = 
     let fL = freq_list list list []
     (max_list fL) |> (pos fL) |> (get_from_list list)   
-
-let rec writeList list =
-    match list with
-    | [] -> ignore
-    | head :: tail -> 
-        System.Console.WriteLine(head.ToString())
-        writeList tail
 
 System.Console.WriteLine("Введите 5 элементов списка:")
 let arr = readList 5
@@ -96,4 +102,45 @@ System.Console.WriteLine(count_odd arr)
 System.Console.WriteLine(frequency arr 3 0)
 System.Console.Write("Самый часто встречающийся элемент: ")
 System.Console.WriteLine(find_most_frequent arr)
+
+// Задание 6. Построить реализацию двоичного дерева с элементом строка.
+
+type BinaryTree =
+    | Leaf
+    | Node of string * BinaryTree * BinaryTree
+
+let empty = Leaf
+
+let rec insert value tree =
+    match tree with
+    | Leaf -> Node(value, Leaf, Leaf)
+    | Node(v, left, right) ->
+        if value < v then
+            Node(v, insert value left, right)
+        elif value > v then
+            Node(v, left, insert value right)
+        else
+            tree
+
+let rec contains value tree =
+    match tree with
+    | Leaf -> false
+    | Node(v, left, right) ->
+        if value = v then true
+        elif value < v then contains value left
+        else contains value right
+
+let rec traverse tree =
+    match tree with
+    | Leaf -> []
+    | Node(v, left, right) -> traverse left @ [v] @ traverse right
+
+let print_tree tree =
+    let rec print tree_arr =
+        match tree_arr with
+        | [] -> System.Console.WriteLine("")
+        | head::tail ->
+            System.Console.Write(head + " ")
+            print tail
+    print (traverse tree)
 
