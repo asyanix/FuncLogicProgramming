@@ -56,3 +56,80 @@ wife(X, Y) :-
     child(C, X),
     child(C, Y).
 
+# Построить предикат grand_da(X, Y), который проверяет, является ли X внучкой Y. 
+# Через базу фактов
+
+grand_da(X, Y) :-
+    woman(X),
+    child(X, Z),
+    child(Z, Y).
+
+# Через предикаты
+
+grand_da(X, Y) :-
+    woman(X),
+    parent(Z, X),
+    parent(Y, Z).
+
+# Построить предикат grand_dats(X), который выводит всех внучек X.
+# Через базу фактов
+
+grand_dats(X) :-
+    woman(GD),
+    child(GD, Z),
+    child(Z, X),
+    write(GD), nl,
+    fail.
+
+# Через предикаты
+
+grand_dats(X) :-
+    grand_da(GD, X),
+    write(GD), nl,
+    fail.
+
+# Построить предикат grand_pa_and_da(X,Y), который проверяет, являются ли X и Y дедушкой и внучкой или внучкой и дедушкой.
+# Через базу фактов
+
+ grand_pa_and_da(X, Y) :-
+    (man(X), woman(Y), child(Y, Z), child(Z, X));
+    (man(Y), woman(X), child(X, Z), child(Z, Y)).
+
+# Через предикаты
+
+grand_pa_and_da(X, Y) :-
+    (man(X), grand_da(Y, X));
+    (man(Y), grand_da(X, Y)).
+
+# Построить предикат, который проверяет, является ли X тетей Y. 
+# Через базу фактов
+
+aunt(X, Y) :-
+    woman(X),
+    child(Y, P),
+    child(X, P1), child(P, P1),
+    X \= P.
+
+# Через предикаты
+
+aunt(X, Y) :-
+    woman(X),
+    parent(P, Y),
+    b_s(X, P).
+
+# Построить предикат, который выводит всех тетей X.
+# Через базу фактов
+aunts(X) :-
+    woman(A),
+    child(X, P),
+    child(A, GP),
+    child(P, GP),
+    A \= P,
+    write(A), nl,
+    fail.
+
+# Через предикаты
+aunts(X) :-
+    aunt(A, X),
+    write(A), nl,
+    fail.
